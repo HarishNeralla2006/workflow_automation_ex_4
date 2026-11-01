@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/"
+             xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/"
+             xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/"
+             xmlns:modeler="http://camunda.org/schema/modeler/1.0"
+             id="Definitions_OrderPriority"
+             name="Order Priority Decision Definitions"
+             namespace="http://camunda.org/schema/1.0/dmn"
+             exporter="Camunda Modeler"
+             exporterVersion="5.28.0"
+             modeler:executionPlatform="Camunda Cloud"
+             modeler:executionPlatformVersion="8.5.0">
+  <decision id="order-priority-decision" name="Order Priority Decision">
+    <decisionTable id="DecisionTable_OrderPriority" hitPolicy="FIRST">
+      <input id="Input_orderTotal" label="Order Total ($)">
+        <inputExpression id="InputExpression_orderTotal" typeRef="number">
+          <text>orderTotal</text>
+        </inputExpression>
+      </input>
+      <input id="Input_customerCategory" label="Customer Category">
+        <inputExpression id="InputExpression_customerCategory" typeRef="string">
+          <text>customerCategory</text>
+        </inputExpression>
+      </input>
+      <input id="Input_deliveryPreference" label="Delivery Preference">
+        <inputExpression id="InputExpression_deliveryPreference" typeRef="string">
+          <text>deliveryPreference</text>
+        </inputExpression>
+      </input>
+      <output id="Output_priority" label="Priority" name="priority" typeRef="string">
+        <outputValues id="OutputValues_priority">
+          <text>"HIGH","MEDIUM","LOW"</text>
+        </outputValues>
+      </output>
+      <output id="Output_slaHours" label="Fulfillment SLA (Hours)" name="slaHours" typeRef="number" />
+
+      <rule id="Rule_P1">
+        <description>Platinum VIP tier customers receive highest priority fulfillment</description>
+        <inputEntry id="InputEntry_P1_1">
+          <text>-</text>
+        </inputEntry>
+        <inputEntry id="InputEntry_P1_2">
+          <text>"PLATINUM"</text>
+        </inputEntry>
+        <inputEntry id="InputEntry_P1_3">
+          <text>-</text>
+        </inputEntry>
+        <outputEntry id="OutputEntry_P1_1">
+          <text>"HIGH"</text>
+        </outputEntry>
+        <outputEntry id="OutputEntry_P1_2">
+          <text>4</text>
+        </outputEntry>
+      </rule>
+
+      <rule id="Rule_P2">
+        <description>High value orders (orderTotal &gt;= 1000) receive high fulfillment priority</description>
+        <inputEntry id="InputEntry_P2_1">
+          <text>&gt;= 1000</text>
+        </inputEntry>
+        <inputEntry id="InputEntry_P2_2">
+          <text>-</text>
+        </inputEntry>
+        <inputEntry id="InputEntry_P2_3">
+          <text>-</text>
+        </inputEntry>
+        <outputEntry id="OutputEntry_P2_1">
+          <text>"HIGH"</text>
+        </outputEntry>
+        <outputEntry id="OutputEntry_P2_2">
+          <text>6</text>
+        </outputEntry>
+      </rule>
+
+      <rule id="Rule_P3">
+        <description>Same day delivery preference dictates urgent dispatch</description>
+        <inputEntry id="InputEntry_P3_1">
+          <text>-</text>
+        </inputEntry>
+        <inputEntry id="InputEntry_P3_2">
+          <text>-</text>
+        </inputEntry>
+        <inputEntry id="InputEntry_P3_3">
+          <text>"SAME_DAY"</text>
+        </inputEntry>
+        <outputEntry id="OutputEntry_P3_1">
+          <text>"HIGH"</text>
+        </outputEntry>
+        <outputEntry id="OutputEntry_P3_2">
+          <text>2</text>
+        </outputEntry>
+      </rule>
+
+      <rule id="Rule_P4">
+        <description>Gold category customers receive medium priority with expedited SLA</description>
+        <inputEntry id="InputEntry_P4_1">
+          <text>-</text>
+        </inputEntry>
+        <inputEntry id="InputEntry_P4_2">
+          <text>"GOLD"</text>
+        </inputEntry>
+        <inputEntry id="InputEntry_P4_3">
+          <text>-</text>
+        </inputEntry>
+        <outputEntry id="OutputEntry_P4_1">
+          <text>"MEDIUM"</text>
+        </outputEntry>
+        <outputEntry id="OutputEntry_P4_2">
+          <text>12</text>
+        </outputEntry>
+      </rule>
+
+      <rule id="Rule_P5">
+        <description>Express shipping requests receive medium priority</description>
+        <inputEntry id="InputEntry_P5_1">
+          <text>-</text>
+        </inputEntry>
+        <inputEntry id="InputEntry_P5_2">
+          <text>-</text>
+        </inputEntry>
+        <inputEntry id="InputEntry_P5_3">
+          <text>"EXPRESS"</text>
+        </inputEntry>
+        <outputEntry id="OutputEntry_P5_1">
+          <text>"MEDIUM"</text>
+        </outputEntry>
+        <outputEntry id="OutputEntry_P5_2">
+          <text>12</text>
+        </outputEntry>
+      </rule>
+
+      <rule id="Rule_P6">
+        <description>Low value regular customer orders with standard delivery</description>
+        <inputEntry id="InputEntry_P6_1">
+          <text>&lt; 200</text>
+        </inputEntry>
+        <inputEntry id="InputEntry_P6_2">
+          <text>"REGULAR"</text>
+        </inputEntry>
+        <inputEntry id="InputEntry_P6_3">
+          <text>"STANDARD"</text>
+        </inputEntry>
+        <outputEntry id="OutputEntry_P6_1">
+          <text>"LOW"</text>
+        </outputEntry>
+        <outputEntry id="OutputEntry_P6_2">
+          <text>48</text>
+        </outputEntry>
+      </rule>
+
+      <rule id="Rule_P7">
+        <description>Standard default priority fallback</description>
+        <inputEntry id="InputEntry_P7_1">
+          <text>-</text>
+        </inputEntry>
+        <inputEntry id="InputEntry_P7_2">
+          <text>-</text>
+        </inputEntry>
+        <inputEntry id="InputEntry_P7_3">
+          <text>-</text>
+        </inputEntry>
+        <outputEntry id="OutputEntry_P7_1">
+          <text>"MEDIUM"</text>
+        </outputEntry>
+        <outputEntry id="OutputEntry_P7_2">
+          <text>24</text>
+        </outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+
+  <dmndi:DMNDI>
+    <dmndi:DMNDiagram id="DMNDiagram_OrderPriority">
+      <dmndi:DMNShape id="DMNShape_OrderPriority" dmnElementRef="order-priority-decision">
+        <dc:Bounds height="80" width="180" x="160" y="100" />
+      </dmndi:DMNShape>
+    </dmndi:DMNDiagram>
+  </dmndi:DMNDI>
+</definitions>

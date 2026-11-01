@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/" xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_LoanDecision" name="Loan Approval Decision Definitions" namespace="http://camunda.org/schema/1.0/dmn" exporter="Camunda Modeler" exporterVersion="5.46.1" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.5.0">
+  <decision id="loan-approval-decision" name="Loan Approval Decision">
+    <decisionTable id="DecisionTable_LoanApproval" hitPolicy="FIRST">
+      <input id="Input_creditScore" label="Credit Score">
+        <inputExpression id="InputExpression_creditScore" typeRef="number">
+          <text>creditScore</text>
+        </inputExpression>
+      </input>
+      <input id="Input_requestedAmount" label="Requested Amount">
+        <inputExpression id="InputExpression_requestedAmount" typeRef="number">
+          <text>requestedAmount</text>
+        </inputExpression>
+      </input>
+      <input id="Input_monthlyIncome" label="Monthly Income">
+        <inputExpression id="InputExpression_monthlyIncome" typeRef="number">
+          <text>monthlyIncome</text>
+        </inputExpression>
+      </input>
+      <output id="Output_decision" label="Decision" name="decision" typeRef="string">
+        <outputValues id="OutputValues_decision">
+          <text>"Approved","Rejected","Manual Review"</text>
+        </outputValues>
+      </output>
+      <output id="Output_reason" label="Reason" name="reason" typeRef="string" />
+      <rule id="Rule_1">
+        <description>Applicant credit score below 580 fails minimum creditworthiness threshold</description>
+        <inputEntry id="InputEntry_1_1">
+          <text>&lt; 580</text>
+        </inputEntry>
+        <inputEntry id="InputEntry_1_2">
+          <text>-</text>
+        </inputEntry>
+        <inputEntry id="InputEntry_1_3">
+          <text>-</text>
+        </inputEntry>
+        <outputEntry id="OutputEntry_1_1">
+          <text>"Rejected"</text>
+        </outputEntry>
+        <outputEntry id="OutputEntry_1_2">
+          <text>"Credit score below minimum eligible threshold of 580"</text>
+        </outputEntry>
+      </rule>
+      <rule id="Rule_2">
+        <description>High credit score with loan amount within 10x monthly income</description>
+        <inputEntry id="InputEntry_2_1">
+          <text>&gt;= 700</text>
+        </inputEntry>
+        <inputEntry id="InputEntry_2_2">
+          <text>&lt;= monthlyIncome * 10</text>
+        </inputEntry>
+        <inputEntry id="InputEntry_2_3">
+          <text>-</text>
+        </inputEntry>
+        <outputEntry id="OutputEntry_2_1">
+          <text>"Approved"</text>
+        </outputEntry>
+        <outputEntry id="OutputEntry_2_2">
+          <text>"Excellent credit score and loan amount within 10x monthly income"</text>
+        </outputEntry>
+      </rule>
+      <rule id="Rule_3">
+        <description>Good credit score with loan amount within 5x monthly income</description>
+        <inputEntry id="InputEntry_3_1">
+          <text>&gt;= 650</text>
+        </inputEntry>
+        <inputEntry id="InputEntry_3_2">
+          <text>&lt;= monthlyIncome * 5</text>
+        </inputEntry>
+        <inputEntry id="InputEntry_3_3">
+          <text>-</text>
+        </inputEntry>
+        <outputEntry id="OutputEntry_3_1">
+          <text>"Approved"</text>
+        </outputEntry>
+        <outputEntry id="OutputEntry_3_2">
+          <text>"Good credit score and loan amount within 5x monthly income"</text>
+        </outputEntry>
+      </rule>
+      <rule id="Rule_4">
+        <description>Fair credit score (580 to 649) requires manual loan officer review</description>
+        <inputEntry id="InputEntry_4_1">
+          <text>[580..649]</text>
+        </inputEntry>
+        <inputEntry id="InputEntry_4_2">
+          <text>-</text>
+        </inputEntry>
+        <inputEntry id="InputEntry_4_3">
+          <text>-</text>
+        </inputEntry>
+        <outputEntry id="OutputEntry_4_1">
+          <text>"Manual Review"</text>
+        </outputEntry>
+        <outputEntry id="OutputEntry_4_2">
+          <text>"Fair credit score requires risk officer review and assessment"</text>
+        </outputEntry>
+      </rule>
+      <rule id="Rule_5">
+        <description>Credit score is acceptable but loan amount is excessively high relative to income</description>
+        <inputEntry id="InputEntry_5_1">
+          <text>&gt;= 650</text>
+        </inputEntry>
+        <inputEntry id="InputEntry_5_2">
+          <text>&gt; monthlyIncome * 10</text>
+        </inputEntry>
+        <inputEntry id="InputEntry_5_3">
+          <text>-</text>
+        </inputEntry>
+        <outputEntry id="OutputEntry_5_1">
+          <text>"Manual Review"</text>
+        </outputEntry>
+        <outputEntry id="OutputEntry_5_2">
+          <text>"Requested loan amount exceeds 10x monthly income - risk mitigation review required"</text>
+        </outputEntry>
+      </rule>
+      <rule id="Rule_6">
+        <description>Catch-all fallback rule</description>
+        <inputEntry id="InputEntry_6_1">
+          <text>-</text>
+        </inputEntry>
+        <inputEntry id="InputEntry_6_2">
+          <text>-</text>
+        </inputEntry>
+        <inputEntry id="InputEntry_6_3">
+          <text>-</text>
+        </inputEntry>
+        <outputEntry id="OutputEntry_6_1">
+          <text>"Manual Review"</text>
+        </outputEntry>
+        <outputEntry id="OutputEntry_6_2">
+          <text>"Borderline criteria require manual loan officer determination"</text>
+        </outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+  <dmndi:DMNDI>
+    <dmndi:DMNDiagram id="DMNDiagram_LoanApproval">
+      <dmndi:DMNShape id="DMNShape_LoanApproval" dmnElementRef="loan-approval-decision">
+        <dc:Bounds height="80" width="180" x="160" y="100" />
+      </dmndi:DMNShape>
+    </dmndi:DMNDiagram>
+  </dmndi:DMNDI>
+</definitions>

@@ -1,0 +1,14 @@
+{
+  "orderId": "ORD-1003",
+  "customerReference": "CUST-3310",
+  "productId": "PROD-HEADPHONES",
+  "quantity": 2,
+  "unitPrice": 150.0,
+  "deliveryPreference": "EXPRESS",
+  "customerCategory": "GOLD",
+  "paymentToken": "tok_declined_card_0000",
+  "simulateStockOut": false,
+  "simulatePaymentDecline": true,
+  "testIncident": false
+}
+

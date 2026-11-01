@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/" xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_PatientTriageDecision" name="Patient Triage Decision Definitions" namespace="http://camunda.org/schema/1.0/dmn" exporter="Camunda Modeler" exporterVersion="5.46.1" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.5.0">
+  <decision id="patient-triage-decision" name="Patient Clinical Triage Decision">
+    <decisionTable id="DecisionTable_PatientTriage" hitPolicy="FIRST">
+      <input id="Input_hasCriticalSymptoms" label="Has Critical Symptoms">
+        <inputExpression id="InputExpression_hasCriticalSymptoms" typeRef="boolean">
+          <text>hasCriticalSymptoms</text>
+        </inputExpression>
+      </input>
+      <input id="Input_painLevel" label="Pain Level (1-10)">
+        <inputExpression id="InputExpression_painLevel" typeRef="number">
+          <text>painLevel</text>
+        </inputExpression>
+      </input>
+      <input id="Input_durationDays" label="Symptom Duration (Days)">
+        <inputExpression id="InputExpression_durationDays" typeRef="number">
+          <text>durationDays</text>
+        </inputExpression>
+      </input>
+      <output id="Output_triageCategory" label="Triage Category" name="triageCategory" typeRef="string">
+        <outputValues id="OutputValues_triageCategory">
+          <text>"Urgent Assessment","Priority Review","Routine"</text>
+        </outputValues>
+      </output>
+      <output id="Output_triageNotes" label="Triage Clinical Notes" name="triageNotes" typeRef="string" />
+      <rule id="Rule_T1">
+        <description>Critical symptoms indicate acute medical emergency</description>
+        <inputEntry id="InputEntry_T1_1">
+          <text>true</text>
+        </inputEntry>
+        <inputEntry id="InputEntry_T1_2">
+          <text>-</text>
+        </inputEntry>
+        <inputEntry id="InputEntry_T1_3">
+          <text>-</text>
+        </inputEntry>
+        <outputEntry id="OutputEntry_T1_1">
+          <text>"Urgent Assessment"</text>
+        </outputEntry>
+        <outputEntry id="OutputEntry_T1_2">
+          <text>"Critical red-flag symptoms reported: immediate clinical assessment mandated"</text>
+        </outputEntry>
+      </rule>
+      <rule id="Rule_T2">
+        <description>Severe acute pain level (8 to 10) mandates urgent assessment</description>
+        <inputEntry id="InputEntry_T2_1">
+          <text>-</text>
+        </inputEntry>
+        <inputEntry id="InputEntry_T2_2">
+          <text>&gt;= 8</text>
+        </inputEntry>
+        <inputEntry id="InputEntry_T2_3">
+          <text>-</text>
+        </inputEntry>
+        <outputEntry id="OutputEntry_T2_1">
+          <text>"Urgent Assessment"</text>
+        </outputEntry>
+        <outputEntry id="OutputEntry_T2_2">
+          <text>"Severe pain reported (level &gt;= 8): fast-track emergency evaluation required"</text>
+        </outputEntry>
+      </rule>
+      <rule id="Rule_T3">
+        <description>Moderate-to-high pain level (5 to 7) requires priority clinical review within 24 hours</description>
+        <inputEntry id="InputEntry_T3_1">
+          <text>-</text>
+        </inputEntry>
+        <inputEntry id="InputEntry_T3_2">
+          <text>[5..7]</text>
+        </inputEntry>
+        <inputEntry id="InputEntry_T3_3">
+          <text>-</text>
+        </inputEntry>
+        <outputEntry id="OutputEntry_T3_1">
+          <text>"Priority Review"</text>
+        </outputEntry>
+        <outputEntry id="OutputEntry_T3_2">
+          <text>"Moderate pain (level 5-7): expedited specialist or clinical review required"</text>
+        </outputEntry>
+      </rule>
+      <rule id="Rule_T4">
+        <description>Persistent non-acute symptoms lasting longer than 7 days</description>
+        <inputEntry id="InputEntry_T4_1">
+          <text>-</text>
+        </inputEntry>
+        <inputEntry id="InputEntry_T4_2">
+          <text>-</text>
+        </inputEntry>
+        <inputEntry id="InputEntry_T4_3">
+          <text>&gt; 7</text>
+        </inputEntry>
+        <outputEntry id="OutputEntry_T4_1">
+          <text>"Priority Review"</text>
+        </outputEntry>
+        <outputEntry id="OutputEntry_T4_2">
+          <text>"Prolonged symptoms exceeding 7 days warrant priority physician evaluation"</text>
+        </outputEntry>
+      </rule>
+      <rule id="Rule_T5">
+        <description>Mild symptoms and low pain of short duration qualify for routine consultation</description>
+        <inputEntry id="InputEntry_T5_1">
+          <text>-</text>
+        </inputEntry>
+        <inputEntry id="InputEntry_T5_2">
+          <text>&lt; 5</text>
+        </inputEntry>
+        <inputEntry id="InputEntry_T5_3">
+          <text>&lt;= 7</text>
+        </inputEntry>
+        <outputEntry id="OutputEntry_T5_1">
+          <text>"Routine"</text>
+        </outputEntry>
+        <outputEntry id="OutputEntry_T5_2">
+          <text>"Mild, acute symptoms suitable for standard routine scheduling"</text>
+        </outputEntry>
+      </rule>
+      <rule id="Rule_T6">
+        <description>Default triage fallback</description>
+        <inputEntry id="InputEntry_T6_1">
+          <text>-</text>
+        </inputEntry>
+        <inputEntry id="InputEntry_T6_2">
+          <text>-</text>
+        </inputEntry>
+        <inputEntry id="InputEntry_T6_3">
+          <text>-</text>
+        </inputEntry>
+        <outputEntry id="OutputEntry_T6_1">
+          <text>"Routine"</text>
+        </outputEntry>
+        <outputEntry id="OutputEntry_T6_2">
+          <text>"Standard routine outpatient triage category applied"</text>
+        </outputEntry>
+      </rule>
+    </decisionTable>
+  </decision>
+  <dmndi:DMNDI>
+    <dmndi:DMNDiagram id="DMNDiagram_PatientTriage">
+      <dmndi:DMNShape id="DMNShape_PatientTriage" dmnElementRef="patient-triage-decision">
+        <dc:Bounds height="80" width="180" x="160" y="100" />
+      </dmndi:DMNShape>
+    </dmndi:DMNDiagram>
+  </dmndi:DMNDI>
+</definitions>

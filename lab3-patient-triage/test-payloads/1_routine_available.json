@@ -1,0 +1,14 @@
+{
+  "patientReference": "PAT-90112",
+  "patientName": "George Clark",
+  "symptomsSummary": "Mild seasonal allergic rhinitis and sneezing",
+  "appointmentPreference": "GENERAL",
+  "hasCriticalSymptoms": false,
+  "painLevel": 2,
+  "durationDays": 4,
+  "departmentRequired": "General Practice",
+  "simulateNoSlots": false,
+  "simulateApiError": false,
+  "testIncident": false
+}
+

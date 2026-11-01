@@ -1,0 +1,14 @@
+{
+  "patientReference": "PAT-90114",
+  "patientName": "Ian Wright",
+  "symptomsSummary": "Sudden onset severe chest tightness and shortness of breath",
+  "appointmentPreference": "URGENT",
+  "hasCriticalSymptoms": true,
+  "painLevel": 9,
+  "durationDays": 1,
+  "departmentRequired": "Cardiology / Emergency",
+  "simulateNoSlots": false,
+  "simulateApiError": false,
+  "testIncident": false
+}
+

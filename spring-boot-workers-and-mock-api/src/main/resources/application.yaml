@@ -1,0 +1,32 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: camunda8-workers-mock-api
+
+# Camunda 8 Zeebe Client Configuration
+# Choose either Self-Managed (Local Docker Compose) or Camunda 8 SaaS (Cloud)
+camunda:
+  client:
+    # Set enabled to true when connecting to a live Zeebe engine
+    enabled: true
+    mode: simple
+    zeebe:
+      # Option A: Self-Managed / Local Docker Compose (Default)
+      gateway-address: 127.0.0.1:26500
+      security:
+        plaintext: true
+
+      # Option B: Camunda 8 SaaS Cloud (Uncomment below and set your cluster credentials)
+      # cluster-id: ${CAMUNDA_CLUSTER_ID:}
+      # region: ${CAMUNDA_CLUSTER_REGION:bru-2}
+      # client-id: ${CAMUNDA_CLIENT_ID:}
+      # client-secret: ${CAMUNDA_CLIENT_SECRET:}
+
+logging:
+  level:
+    root: INFO
+    com.camunda.assignment: DEBUG
+    io.camunda.zeebe.client: INFO
+

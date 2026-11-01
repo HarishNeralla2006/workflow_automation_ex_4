@@ -1,0 +1,11 @@
+{
+  "applicantName": "Emma Watson",
+  "applicantEmail": "emma.watson@example.com",
+  "monthlyIncome": 7000,
+  "requestedAmount": 35000,
+  "employmentStatus": "EMPLOYED",
+  "creditScore": 740,
+  "simulateApiError": false,
+  "testIncident": true
+}
+

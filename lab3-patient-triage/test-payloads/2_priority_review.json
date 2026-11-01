@@ -1,0 +1,14 @@
+{
+  "patientReference": "PAT-90113",
+  "patientName": "Hannah Abbott",
+  "symptomsSummary": "Persistent lower back pain radiating to left leg for over two weeks",
+  "appointmentPreference": "SPECIALIST",
+  "hasCriticalSymptoms": false,
+  "painLevel": 6,
+  "durationDays": 16,
+  "departmentRequired": "Orthopedics",
+  "simulateNoSlots": false,
+  "simulateApiError": false,
+  "testIncident": false
+}
+

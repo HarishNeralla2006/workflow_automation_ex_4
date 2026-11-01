@@ -1,0 +1,14 @@
+{
+  "orderId": "ORD-1001",
+  "customerReference": "CUST-8821",
+  "productId": "PROD-LAPTOP-BAG",
+  "quantity": 1,
+  "unitPrice": 85.0,
+  "deliveryPreference": "STANDARD",
+  "customerCategory": "REGULAR",
+  "paymentToken": "tok_visa_valid_9981",
+  "simulateStockOut": false,
+  "simulatePaymentDecline": false,
+  "testIncident": false
+}
+

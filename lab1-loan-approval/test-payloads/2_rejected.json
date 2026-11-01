@@ -1,0 +1,11 @@
+{
+  "applicantName": "Bob Smith",
+  "applicantEmail": "bob.smith@example.com",
+  "monthlyIncome": 3200,
+  "requestedAmount": 18000,
+  "employmentStatus": "EMPLOYED",
+  "creditScore": 520,
+  "simulateApiError": false,
+  "testIncident": false
+}
+

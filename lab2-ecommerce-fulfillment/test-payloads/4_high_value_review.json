@@ -1,0 +1,14 @@
+{
+  "orderId": "ORD-1004",
+  "customerReference": "CUST-9901",
+  "productId": "PROD-SERVER-WORKSTATION",
+  "quantity": 2,
+  "unitPrice": 1600.0,
+  "deliveryPreference": "EXPRESS",
+  "customerCategory": "PLATINUM",
+  "paymentToken": "tok_visa_valid_7788",
+  "simulateStockOut": false,
+  "simulatePaymentDecline": false,
+  "testIncident": false
+}
+

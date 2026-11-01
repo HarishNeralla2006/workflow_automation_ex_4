@@ -1,0 +1,14 @@
+{
+  "patientReference": "PAT-90116",
+  "patientName": "Kevin Bacon",
+  "symptomsSummary": "Follow-up consultation for blood pressure monitoring",
+  "appointmentPreference": "GENERAL",
+  "hasCriticalSymptoms": false,
+  "painLevel": 2,
+  "durationDays": 5,
+  "departmentRequired": "General Practice",
+  "simulateNoSlots": false,
+  "simulateApiError": true,
+  "testIncident": false
+}
+

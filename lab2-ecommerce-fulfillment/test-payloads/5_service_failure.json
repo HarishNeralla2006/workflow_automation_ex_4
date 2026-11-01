@@ -1,0 +1,14 @@
+{
+  "orderId": "ORD-1005",
+  "customerReference": "CUST-5555",
+  "productId": "PROD-GRAPHICS-CARD",
+  "quantity": 1,
+  "unitPrice": 850.0,
+  "deliveryPreference": "STANDARD",
+  "customerCategory": "GOLD",
+  "paymentToken": "tok_error_gateway_fail",
+  "simulateStockOut": false,
+  "simulatePaymentDecline": false,
+  "testIncident": true
+}
+

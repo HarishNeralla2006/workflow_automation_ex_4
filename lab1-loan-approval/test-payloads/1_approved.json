@@ -1,0 +1,11 @@
+{
+  "applicantName": "Alice Johnson",
+  "applicantEmail": "alice.johnson@example.com",
+  "monthlyIncome": 6000,
+  "requestedAmount": 25000,
+  "employmentStatus": "EMPLOYED",
+  "creditScore": 750,
+  "simulateApiError": false,
+  "testIncident": false
+}
+

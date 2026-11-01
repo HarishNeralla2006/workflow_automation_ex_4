@@ -1,0 +1,14 @@
+{
+  "orderId": "ORD-1002",
+  "customerReference": "CUST-4520",
+  "productId": "PROD-LIMITED-EDITION",
+  "quantity": 50,
+  "unitPrice": 120.0,
+  "deliveryPreference": "STANDARD",
+  "customerCategory": "REGULAR",
+  "paymentToken": "tok_visa_valid_1122",
+  "simulateStockOut": true,
+  "simulatePaymentDecline": false,
+  "testIncident": false
+}
+

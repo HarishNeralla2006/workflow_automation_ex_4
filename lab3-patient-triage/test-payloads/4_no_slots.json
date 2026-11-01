@@ -1,0 +1,14 @@
+{
+  "patientReference": "PAT-90115",
+  "patientName": "Julia Roberts",
+  "symptomsSummary": "Routine annual wellness checkup requested",
+  "appointmentPreference": "GENERAL",
+  "hasCriticalSymptoms": false,
+  "painLevel": 1,
+  "durationDays": 2,
+  "departmentRequired": "General Practice",
+  "simulateNoSlots": true,
+  "simulateApiError": false,
+  "testIncident": false
+}
+

@@ -1,0 +1,11 @@
+{
+  "applicantName": "Carol Danvers",
+  "applicantEmail": "carol.danvers@example.com",
+  "monthlyIncome": 4500,
+  "requestedAmount": 30000,
+  "employmentStatus": "SELF_EMPLOYED",
+  "creditScore": 625,
+  "simulateApiError": false,
+  "testIncident": false
+}
+
