@@ -70,25 +70,40 @@ Evaluates creditworthiness using `FIRST` hit policy across 6 documented rules.
 
 ## 5. REST Connector & API Examples
 
-### Connector Configuration (`io.camunda:http-json:1`):
+### Connector Configuration (`io.camunda:http-json:1` with Element Template `io.camunda.connectors.HttpJson.v2`):
+- **Implementation**: Native Camunda 8 Outbound REST Connector (No custom Java worker code is used to perform HTTP calls; Zeebe Connector Runtime directly executes the request).
+- **Element Template ID**: `io.camunda.connectors.HttpJson.v2`
 - **Method**: `POST`
-- **URL**: `http://localhost:8080/api/credit-assessment`
+- **URL**: `http://localhost:8080/api/credit-assessment` (and `http://localhost:8080/api/credit-check`)
+- **Headers (FEEL)**:
+  ```feel
+  = {
+    "Content-Type": "application/json",
+    "Accept": "application/json"
+  }
+  ```
 - **Request Body (FEEL)**:
   ```feel
   ={
-    applicantName: applicantName,
+    customerName: applicantName,
     monthlyIncome: monthlyIncome,
-    creditScore: creditScore,
-    simulateApiError: simulateApiError
+    loanAmount: requestedAmount,
+    existingEmi: if is defined(existingEmi) then existingEmi else 0,
+    tenureMonths: if is defined(tenureMonths) then tenureMonths else 36,
+    creditScore: if is defined(creditScore) then creditScore else null,
+    simulateApiError: if is defined(simulateApiError) then simulateApiError else false
   }
   ```
+- **Result Variable**: `creditCheckResponse`
 
 ### Sample API Request:
 ```json
 {
-  "applicantName": "Alice Johnson",
+  "customerName": "Alice Johnson",
   "monthlyIncome": 6000,
-  "creditScore": 750,
+  "loanAmount": 20000,
+  "existingEmi": 500,
+  "tenureMonths": 36,
   "simulateApiError": false
 }
 ```
@@ -96,8 +111,20 @@ Evaluates creditworthiness using `FIRST` hit policy across 6 documented rules.
 ### Sample API Response (HTTP 200 OK):
 ```json
 {
+  "customerName": "Alice Johnson",
   "applicantName": "Alice Johnson",
+  "demoScore": 750,
   "creditScore": 750,
+  "creditTier": "EXCELLENT",
+  "estimatedEmi": 664.29,
+  "totalMonthlyEmi": 1164.29,
+  "emiRatio": 19.40,
+  "eligible": true,
+  "decision": "ELIGIBLE",
+  "message": "Meets demonstration eligibility rules",
+  "status": "SUCCESS"
+}
+```
   "creditTier": "EXCELLENT",
   "status": "SUCCESS",
   "assessmentTimestamp": "2026-11-01T14:10:00Z"

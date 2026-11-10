@@ -38,29 +38,69 @@ class CamundaMockHandler(BaseHTTPRequestHandler):
         print(f"Payload: {json.dumps(req_data)}")
 
         # -------------------------------------------------------------
-        # LAB 1: Credit Assessment API
+        # LAB 1: Credit Assessment & Credit Check API
         # -------------------------------------------------------------
-        if self.path.startswith('/api/credit-assessment'):
+        if self.path.startswith('/api/credit-assessment') or self.path.startswith('/api/credit-check'):
             if req_data.get('simulateApiError') is True:
                 print(" -> Simulating Credit Assessment Bureau Outage (500 Internal Error)")
                 self._send_json(500, {"error": "Credit Bureau Service Unavailable / Timeout", "status": 500})
                 return
 
+            customer_name = req_data.get('customerName') or req_data.get('applicantName', 'Applicant')
             monthly_income = float(req_data.get('monthlyIncome', 3000))
+            existing_emi = float(req_data.get('existingEmi', 0))
+            loan_amount = float(req_data.get('loanAmount') or req_data.get('requestedAmount', 10000))
+            tenure_months = int(req_data.get('tenureMonths', 36))
+
+            # Illustrative annual interest rate: 12%
+            monthly_rate = 0.12 / 12.0
+            if loan_amount > 0 and tenure_months > 0:
+                emi = loan_amount * monthly_rate * ((1 + monthly_rate) ** tenure_months) / (((1 + monthly_rate) ** tenure_months) - 1)
+            else:
+                emi = 0.0
+            total_emi = existing_emi + emi
+            emi_ratio = (total_emi / monthly_income) * 100.0 if monthly_income > 0 else 100.0
+
             if 'creditScore' in req_data and req_data['creditScore'] is not None:
                 credit_score = int(req_data['creditScore'])
-            elif monthly_income >= 5000:
-                credit_score = 740
-            elif monthly_income >= 3500:
-                credit_score = 630
+            elif 'demoScore' in req_data and req_data['demoScore'] is not None:
+                credit_score = int(req_data['demoScore'])
             else:
-                credit_score = 540
+                score = 900
+                if emi_ratio > 50:
+                    score -= 250
+                elif emi_ratio > 40:
+                    score -= 150
+                elif emi_ratio > 30:
+                    score -= 75
+                if monthly_income < 25000:
+                    score -= 100
+                credit_score = max(300, min(900, score))
 
             tier = "EXCELLENT" if credit_score >= 700 else "GOOD" if credit_score >= 650 else "FAIR" if credit_score >= 580 else "POOR"
+            
+            if credit_score >= 700 and emi_ratio <= 40:
+                decision = "ELIGIBLE"
+                eligible = True
+            elif credit_score >= 600 and emi_ratio <= 50:
+                decision = "MANUAL_REVIEW"
+                eligible = False
+            else:
+                decision = "NOT_ELIGIBLE"
+                eligible = False
+
             resp = {
-                "applicantName": req_data.get('applicantName', 'Applicant'),
+                "customerName": customer_name,
+                "applicantName": customer_name,
+                "demoScore": credit_score,
                 "creditScore": credit_score,
                 "creditTier": tier,
+                "estimatedEmi": round(emi, 2),
+                "totalMonthlyEmi": round(total_emi, 2),
+                "emiRatio": round(emi_ratio, 2),
+                "eligible": eligible,
+                "decision": decision,
+                "message": "Meets demonstration eligibility rules" if eligible else "Requires manual review" if decision == "MANUAL_REVIEW" else "Does not meet demonstration eligibility rules",
                 "status": "SUCCESS",
                 "assessmentTimestamp": datetime.datetime.now(datetime.timezone.utc).isoformat()
             }

@@ -154,27 +154,50 @@ Complete production-ready Camunda 8 implementation covering **Lab 1 (Loan Approv
 
 ## 5. REST Connector Configuration & API Examples
 
-All BPMN service tasks utilize Camunda 8's native REST Connector (`io.camunda:http-json:1`).
+All REST integrations utilize **Camunda 8's native Outbound REST Connector** (`io.camunda:http-json:1`, Element Template: `io.camunda.connectors.HttpJson.v2`).
+> **Important Architecture Note**: No custom Java service task worker is used to call HTTP URLs. Zeebe's built-in Connector Runtime executes the outbound HTTP requests directly, parses JSON responses, and maps variables into the workflow instance.
 
-### Lab 1: Credit Assessment API
-- **Endpoint**: `POST http://localhost:8080/api/credit-assessment`
-- **Request Payload**:
-  ```json
-  {
-    "applicantEmail": "alice@example.com",
-    "requestedAmount": 20000,
-    "monthlyIncome": 6000
+### Lab 1: Credit Assessment & Credit Check API
+- **Endpoint**: `POST http://localhost:8080/api/credit-assessment` (also supports `POST http://localhost:8080/api/credit-check` per tutorial reference)
+- **Connector Element Template**: `io.camunda.connectors.HttpJson.v2` (Version 12)
+- **Authentication**: `None` (`authentication.type = "noAuth"`)
+- **Headers**:
+  ```feel
+  = {
+    "Content-Type": "application/json",
+    "Accept": "application/json"
   }
   ```
-- **Response Payload**:
-  ```json
-  {
-    "status": "SUCCESS",
-    "creditScore": 760,
-    "creditTier": "EXCELLENT"
+- **Request Body (FEEL expression)**:
+  ```feel
+  = {
+    "customerName": applicantName,
+    "monthlyIncome": monthlyIncome,
+    "loanAmount": requestedAmount,
+    "existingEmi": if is defined(existingEmi) then existingEmi else 0,
+    "tenureMonths": if is defined(tenureMonths) then tenureMonths else 36
   }
   ```
-- **Connector Result Mapping**: `{"creditScore": response.body.creditScore, "creditTier": response.body.creditTier}`
+- **Result Variable**: `creditCheckResponse`
+- **Output Variable Mappings**:
+  - `creditScore`: `=if is defined(creditCheckResponse.body.creditScore) then creditCheckResponse.body.creditScore else creditCheckResponse.body.demoScore`
+  - `creditTier`: `=creditCheckResponse.body.creditTier`
+- **Sample Response Payload**:
+  ```json
+  {
+    "customerName": "Arun",
+    "demoScore": 750,
+    "creditScore": 750,
+    "creditTier": "EXCELLENT",
+    "estimatedEmi": 16607.15,
+    "totalMonthlyEmi": 26607.15,
+    "emiRatio": 44.35,
+    "eligible": false,
+    "decision": "MANUAL_REVIEW",
+    "message": "Requires manual review",
+    "status": "SUCCESS"
+  }
+  ```
 
 ### Lab 2: Payment Gateway API
 - **Endpoint**: `POST http://localhost:8080/api/payment/charge`
