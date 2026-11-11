@@ -196,7 +196,7 @@ class CamundaMockHandler(BaseHTTPRequestHandler):
         else:
             self._send_json(404, {"error": f"Endpoint {self.path} not found"})
 
-def run(port=8080):
+def run(port=8081):
     server_address = ('', port)
     httpd = HTTPServer(server_address, CamundaMockHandler)
     print(f"============================================================")

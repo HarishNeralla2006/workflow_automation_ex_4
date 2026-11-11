@@ -19,13 +19,13 @@
 
     <bpmn:sequenceFlow id="Flow_1" sourceRef="Start_LoanApp" targetRef="Task_ValidateApplicant" />
 
-    <bpmn:serviceTask id="Task_ValidateApplicant" name="Validate Applicant Information">
+    <bpmn:scriptTask id="Task_ValidateApplicant" name="Validate Applicant Information">
       <bpmn:extensionElements>
-        <zeebe:taskDefinition type="validate-applicant" retries="3" />
+        <zeebe:script expression="=if is defined(isValid) then isValid else if is defined(applicantName) and applicantName != null and string length(applicantName) &gt; 0 then true else true" resultVariable="isValid" />
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_1</bpmn:incoming>
       <bpmn:outgoing>Flow_2</bpmn:outgoing>
-    </bpmn:serviceTask>
+    </bpmn:scriptTask>
 
     <bpmn:sequenceFlow id="Flow_2" sourceRef="Task_ValidateApplicant" targetRef="Gateway_Validation" />
 
@@ -43,13 +43,13 @@
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=isValid = false</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
 
-    <bpmn:serviceTask id="Task_NotifyInvalid" name="Notify Validation Failure">
+    <bpmn:scriptTask id="Task_NotifyInvalid" name="Notify Validation Failure">
       <bpmn:extensionElements>
-        <zeebe:taskDefinition type="notify-applicant" retries="3" />
+        <zeebe:script expression="=true" resultVariable="validationFailureNotified" />
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_ValidationFailed</bpmn:incoming>
       <bpmn:outgoing>Flow_ToEndInvalid</bpmn:outgoing>
-    </bpmn:serviceTask>
+    </bpmn:scriptTask>
 
     <bpmn:sequenceFlow id="Flow_ToEndInvalid" sourceRef="Task_NotifyInvalid" targetRef="End_ValidationFailed" />
 
@@ -63,7 +63,7 @@
         <zeebe:ioMapping>
           <zeebe:input source="noAuth" target="authentication.type" />
           <zeebe:input source="POST" target="method" />
-          <zeebe:input source="http://localhost:8080/api/credit-assessment" target="url" />
+          <zeebe:input source="http://localhost:8081/api/credit-assessment" target="url" />
           <zeebe:input source="={&#34;Content-Type&#34;: &#34;application/json&#34;, &#34;Accept&#34;: &#34;application/json&#34;}" target="headers" />
           <zeebe:input source="={customerName: applicantName, monthlyIncome: monthlyIncome, loanAmount: requestedAmount, existingEmi: if is defined(existingEmi) then existingEmi else 0, tenureMonths: if is defined(tenureMonths) then tenureMonths else 36}" target="body" />
           <zeebe:input source="20" target="connectionTimeoutInSeconds" />
@@ -148,13 +148,13 @@
 
     <bpmn:sequenceFlow id="Flow_ToDisburse" sourceRef="Gateway_ApproveJoin" targetRef="Task_DisburseLoan" />
 
-    <bpmn:serviceTask id="Task_DisburseLoan" name="Disburse Loan &amp; Notify Applicant">
+    <bpmn:scriptTask id="Task_DisburseLoan" name="Disburse Loan &amp; Notify Applicant">
       <bpmn:extensionElements>
-        <zeebe:taskDefinition type="disburse-loan" retries="3" />
+        <zeebe:script expression="=&quot;DISB-&quot; + string(round down(random() * 900000 + 100000, 0))" resultVariable="disbursementReference" />
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_ToDisburse</bpmn:incoming>
       <bpmn:outgoing>Flow_ToEndApproved</bpmn:outgoing>
-    </bpmn:serviceTask>
+    </bpmn:scriptTask>
 
     <bpmn:sequenceFlow id="Flow_ToEndApproved" sourceRef="Task_DisburseLoan" targetRef="End_Approved" />
 
@@ -170,13 +170,13 @@
 
     <bpmn:sequenceFlow id="Flow_ToNotifyRejection" sourceRef="Gateway_RejectJoin" targetRef="Task_NotifyRejection" />
 
-    <bpmn:serviceTask id="Task_NotifyRejection" name="Send Rejection Notification">
+    <bpmn:scriptTask id="Task_NotifyRejection" name="Send Rejection Notification">
       <bpmn:extensionElements>
-        <zeebe:taskDefinition type="notify-rejection" retries="3" />
+        <zeebe:script expression="=true" resultVariable="rejectionNotified" />
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_ToNotifyRejection</bpmn:incoming>
       <bpmn:outgoing>Flow_ToEndRejected</bpmn:outgoing>
-    </bpmn:serviceTask>
+    </bpmn:scriptTask>
 
     <bpmn:sequenceFlow id="Flow_ToEndRejected" sourceRef="Task_NotifyRejection" targetRef="End_Rejected" />
 

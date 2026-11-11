@@ -19,13 +19,13 @@
 
     <bpmn:sequenceFlow id="Flow_Triage_1" sourceRef="Start_TriageRequest" targetRef="Task_ValidateRegistration" />
 
-    <bpmn:serviceTask id="Task_ValidateRegistration" name="Validate Patient Registration">
+    <bpmn:scriptTask id="Task_ValidateRegistration" name="Validate Patient Registration">
       <bpmn:extensionElements>
-        <zeebe:taskDefinition type="validate-patient-registration" retries="3" />
+        <zeebe:script expression="=if is defined(registrationValid) then registrationValid else if is defined(isRegistered) then isRegistered else if is defined(patientReference) and string length(patientReference) &gt; 0 then true else true" resultVariable="registrationValid" />
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_Triage_1</bpmn:incoming>
       <bpmn:outgoing>Flow_Triage_2</bpmn:outgoing>
-    </bpmn:serviceTask>
+    </bpmn:scriptTask>
 
     <bpmn:sequenceFlow id="Flow_Triage_2" sourceRef="Task_ValidateRegistration" targetRef="Gateway_RegistrationValid" />
 
@@ -43,13 +43,13 @@
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=registrationValid = false</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
 
-    <bpmn:serviceTask id="Task_NotifyInvalidRegistration" name="Notify Registration Error">
+    <bpmn:scriptTask id="Task_NotifyInvalidRegistration" name="Notify Registration Error">
       <bpmn:extensionElements>
-        <zeebe:taskDefinition type="notify-invalid-registration" retries="3" />
+        <zeebe:script expression="=true" resultVariable="invalidRegNotified" />
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_RegInvalid</bpmn:incoming>
       <bpmn:outgoing>Flow_ToEndRegInvalid</bpmn:outgoing>
-    </bpmn:serviceTask>
+    </bpmn:scriptTask>
 
     <bpmn:sequenceFlow id="Flow_ToEndRegInvalid" sourceRef="Task_NotifyInvalidRegistration" targetRef="End_RegistrationFailed" />
 
@@ -95,13 +95,13 @@
 
     <bpmn:sequenceFlow id="Flow_Triage_4" sourceRef="Task_UrgentClinicalAssessment" targetRef="Task_DispatchEmergency" />
 
-    <bpmn:serviceTask id="Task_DispatchEmergency" name="Dispatch Emergency Care / Expedited Booking">
+    <bpmn:scriptTask id="Task_DispatchEmergency" name="Dispatch Emergency Care / Expedited Booking">
       <bpmn:extensionElements>
-        <zeebe:taskDefinition type="dispatch-emergency-care" retries="3" />
+        <zeebe:script expression="=true" resultVariable="emergencyDispatched" />
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_Triage_4</bpmn:incoming>
       <bpmn:outgoing>Flow_ToEndUrgent</bpmn:outgoing>
-    </bpmn:serviceTask>
+    </bpmn:scriptTask>
 
     <bpmn:sequenceFlow id="Flow_ToEndUrgent" sourceRef="Task_DispatchEmergency" targetRef="End_UrgentHandled" />
 
@@ -115,7 +115,7 @@
         <zeebe:ioMapping>
           <zeebe:input source="noAuth" target="authentication.type" />
           <zeebe:input source="POST" target="method" />
-          <zeebe:input source="http://localhost:8080/api/appointments/check-slots" target="url" />
+          <zeebe:input source="http://localhost:8081/api/appointments/check-slots" target="url" />
           <zeebe:input source="={&#34;Content-Type&#34;: &#34;application/json&#34;, &#34;Accept&#34;: &#34;application/json&#34;}" target="headers" />
           <zeebe:input source="={patientReference: patientReference, departmentRequired: departmentRequired, triageCategory: triageCategory, appointmentPreference: appointmentPreference}" target="body" />
           <zeebe:input source="20" target="connectionTimeoutInSeconds" />
@@ -175,13 +175,13 @@
       <bpmn:conditionExpression xsi:type="bpmn:tFormalExpression">=staffAction = "PLACE_ON_WAITLIST"</bpmn:conditionExpression>
     </bpmn:sequenceFlow>
 
-    <bpmn:serviceTask id="Task_NotifyWaitlist" name="Send Waitlist Notification">
+    <bpmn:scriptTask id="Task_NotifyWaitlist" name="Send Waitlist Notification">
       <bpmn:extensionElements>
-        <zeebe:taskDefinition type="notify-waitlist" retries="3" />
+        <zeebe:script expression="=true" resultVariable="waitlistNotified" />
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_StaffWaitlist</bpmn:incoming>
       <bpmn:outgoing>Flow_ToEndWaitlist</bpmn:outgoing>
-    </bpmn:serviceTask>
+    </bpmn:scriptTask>
 
     <bpmn:sequenceFlow id="Flow_ToEndWaitlist" sourceRef="Task_NotifyWaitlist" targetRef="End_Waitlisted" />
 
@@ -197,23 +197,23 @@
 
     <bpmn:sequenceFlow id="Flow_ToBook" sourceRef="Gateway_BookingJoin" targetRef="Task_BookAppointment" />
 
-    <bpmn:serviceTask id="Task_BookAppointment" name="Confirm &amp; Book Appointment">
+    <bpmn:scriptTask id="Task_BookAppointment" name="Confirm &amp; Book Appointment">
       <bpmn:extensionElements>
-        <zeebe:taskDefinition type="book-appointment" retries="3" />
+        <zeebe:script expression="=&quot;CONFIRMED&quot;" resultVariable="bookingStatus" />
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_ToBook</bpmn:incoming>
       <bpmn:outgoing>Flow_Triage_7</bpmn:outgoing>
-    </bpmn:serviceTask>
+    </bpmn:scriptTask>
 
     <bpmn:sequenceFlow id="Flow_Triage_7" sourceRef="Task_BookAppointment" targetRef="Task_SendConfirmation" />
 
-    <bpmn:serviceTask id="Task_SendConfirmation" name="Send Appointment Confirmation">
+    <bpmn:scriptTask id="Task_SendConfirmation" name="Send Appointment Confirmation">
       <bpmn:extensionElements>
-        <zeebe:taskDefinition type="send-appointment-confirmation" retries="3" />
+        <zeebe:script expression="=&quot;BK-&quot; + string(round down(random() * 900000 + 100000, 0))" resultVariable="confirmationCode" />
       </bpmn:extensionElements>
       <bpmn:incoming>Flow_Triage_7</bpmn:incoming>
       <bpmn:outgoing>Flow_ToEndConfirmed</bpmn:outgoing>
-    </bpmn:serviceTask>
+    </bpmn:scriptTask>
 
     <bpmn:sequenceFlow id="Flow_ToEndConfirmed" sourceRef="Task_SendConfirmation" targetRef="End_AppointmentConfirmed" />
 

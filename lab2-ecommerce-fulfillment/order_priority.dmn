@@ -1,15 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/"
-             xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/"
-             xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/"
-             xmlns:modeler="http://camunda.org/schema/modeler/1.0"
-             id="Definitions_OrderPriority"
-             name="Order Priority Decision Definitions"
-             namespace="http://camunda.org/schema/1.0/dmn"
-             exporter="Camunda Modeler"
-             exporterVersion="5.28.0"
-             modeler:executionPlatform="Camunda Cloud"
-             modeler:executionPlatformVersion="8.5.0">
+<definitions xmlns="https://www.omg.org/spec/DMN/20191111/MODEL/" xmlns:dmndi="https://www.omg.org/spec/DMN/20191111/DMNDI/" xmlns:dc="http://www.omg.org/spec/DMN/20180521/DC/" xmlns:modeler="http://camunda.org/schema/modeler/1.0" id="Definitions_OrderPriority" name="Order Priority Decision Definitions" namespace="http://camunda.org/schema/1.0/dmn" exporter="Camunda Modeler" exporterVersion="5.46.1" modeler:executionPlatform="Camunda Cloud" modeler:executionPlatformVersion="8.5.0">
   <decision id="order-priority-decision" name="Order Priority Decision">
     <decisionTable id="DecisionTable_OrderPriority" hitPolicy="FIRST">
       <input id="Input_orderTotal" label="Order Total ($)">
@@ -33,7 +23,6 @@
         </outputValues>
       </output>
       <output id="Output_slaHours" label="Fulfillment SLA (Hours)" name="slaHours" typeRef="number" />
-
       <rule id="Rule_P1">
         <description>Platinum VIP tier customers receive highest priority fulfillment</description>
         <inputEntry id="InputEntry_P1_1">
@@ -52,7 +41,6 @@
           <text>4</text>
         </outputEntry>
       </rule>
-
       <rule id="Rule_P2">
         <description>High value orders (orderTotal &gt;= 1000) receive high fulfillment priority</description>
         <inputEntry id="InputEntry_P2_1">
@@ -71,7 +59,6 @@
           <text>6</text>
         </outputEntry>
       </rule>
-
       <rule id="Rule_P3">
         <description>Same day delivery preference dictates urgent dispatch</description>
         <inputEntry id="InputEntry_P3_1">
@@ -90,7 +77,6 @@
           <text>2</text>
         </outputEntry>
       </rule>
-
       <rule id="Rule_P4">
         <description>Gold category customers receive medium priority with expedited SLA</description>
         <inputEntry id="InputEntry_P4_1">
@@ -109,7 +95,6 @@
           <text>12</text>
         </outputEntry>
       </rule>
-
       <rule id="Rule_P5">
         <description>Express shipping requests receive medium priority</description>
         <inputEntry id="InputEntry_P5_1">
@@ -128,7 +113,6 @@
           <text>12</text>
         </outputEntry>
       </rule>
-
       <rule id="Rule_P6">
         <description>Low value regular customer orders with standard delivery</description>
         <inputEntry id="InputEntry_P6_1">
@@ -147,7 +131,6 @@
           <text>48</text>
         </outputEntry>
       </rule>
-
       <rule id="Rule_P7">
         <description>Standard default priority fallback</description>
         <inputEntry id="InputEntry_P7_1">
@@ -168,7 +151,6 @@
       </rule>
     </decisionTable>
   </decision>
-
   <dmndi:DMNDI>
     <dmndi:DMNDiagram id="DMNDiagram_OrderPriority">
       <dmndi:DMNShape id="DMNShape_OrderPriority" dmnElementRef="order-priority-decision">

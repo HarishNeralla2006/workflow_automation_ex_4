@@ -158,7 +158,7 @@ All REST integrations utilize **Camunda 8's native Outbound REST Connector** (`i
 > **Important Architecture Note**: No custom Java service task worker is used to call HTTP URLs. Zeebe's built-in Connector Runtime executes the outbound HTTP requests directly, parses JSON responses, and maps variables into the workflow instance.
 
 ### Lab 1: Credit Assessment & Credit Check API
-- **Endpoint**: `POST http://localhost:8080/api/credit-assessment` (also supports `POST http://localhost:8080/api/credit-check` per tutorial reference)
+- **Endpoint**: `POST http://localhost:8081/api/credit-assessment` (also supports `POST http://localhost:8081/api/credit-check` per tutorial reference)
 - **Connector Element Template**: `io.camunda.connectors.HttpJson.v2` (Version 12)
 - **Authentication**: `None` (`authentication.type = "noAuth"`)
 - **Headers**:
@@ -200,7 +200,7 @@ All REST integrations utilize **Camunda 8's native Outbound REST Connector** (`i
   ```
 
 ### Lab 2: Payment Gateway API
-- **Endpoint**: `POST http://localhost:8080/api/payment/charge`
+- **Endpoint**: `POST http://localhost:8081/api/payment/charge`
 - **Request Payload**:
   ```json
   {
@@ -220,7 +220,7 @@ All REST integrations utilize **Camunda 8's native Outbound REST Connector** (`i
 - **Connector Result Mapping**: `{"paymentStatus": response.body.status, "transactionId": response.body.transactionId}`
 
 ### Lab 3: Hospital Scheduling API
-- **Endpoint**: `POST http://localhost:8080/api/appointments/check-slots`
+- **Endpoint**: `POST http://localhost:8081/api/appointments/check-slots`
 - **Request Payload**:
   ```json
   {
@@ -251,7 +251,7 @@ External job workers are built using **Spring Boot 3.3.4** and `spring-boot-star
 
 ### How to Run the Workers & Mock APIs
 1. **Prerequisites**: JDK 17+ and Maven 3.8+.
-2. **Start Mock Server** (zero-dependency Python server on port 8080):
+2. **Start Mock Server** (zero-dependency Python server on port 8081, leaving 8080 for Camunda):
    ```powershell
    python mock_rest_services.py
    ```
